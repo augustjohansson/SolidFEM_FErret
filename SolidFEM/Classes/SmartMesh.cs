@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+using System.IO;
+
 namespace SolidFEM.Classes
 {
     public class SmartMesh
@@ -79,9 +81,32 @@ namespace SolidFEM.Classes
                 }
                 el.Connectivity = el_connectivity;
 
-
+		
             }
 
+	    // Dump to file
+	    string filenodes = "nodes.txt";
+	    using (StreamWriter sw = File.CreateText(filenodes))
+	    {
+		for (int i = 0; i < Nodes.Length; ++i)
+		{
+		    sw.WriteLine(Nodes[i].ToString());
+		}
+	    }
+
+	    string fileconn = "conn.txt";
+	    using (StreamWriter sw = File.CreateText(fileconn))
+	    {
+		for (int i = 0; i < Elements.Length; ++i)
+		{
+		    for (int j = 0; j < Elements[i].Connectivity.Length; ++j)
+		    {
+			sw.Write(Elements[i].Connectivity[j]);
+		    }
+		    sw.Write("\n");
+		}
+	    }
+	    
             }    
         public SmartMesh(int _nu, int _nv, List<Node> _nodes, List<Element> _elements, Mesh _mesh) // for surface mesh
             {
